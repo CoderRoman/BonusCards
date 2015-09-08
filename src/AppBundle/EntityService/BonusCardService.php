@@ -13,46 +13,50 @@ use AppBundle\Entity\BonusCard;
 use AppBundle\Entity\SeriesCard;
 use AppBundle\Repository\BonusCardRepository;
 use AppBundle\Repository\SeriesCardRepository;
+use AppBundle\Entity\Validation;
 
 class BonusCardService extends  EntityServiceBase
 {
 
+    public function getCardsListQuery($params=null) {
+
+        return $this->getRepository()->getCardsListQuery($params);
+    }
+
     public function generateCard(array $params){
-
-        $s=$this->getSeriesCardRepository()->find(6);
-
+        $seriesId=$this->createSeries($params);
+        $series=$this->getSeriesCardRepository()->find($seriesId);
         $em = $this->getDoctrine()->getManager();
-
-
-        for ($i=0;$i<100000;$i++) {
-
+        for ($i=0;$i<$params['total'];$i++) {
           $card= new BonusCard();
-          $card->setNumber(4);
-          $card->setAmount(50);
-          $card->setSeriesCard($s);
+          $card->setNumber($i);
+          $card->setAmount(isset($params['amount'])?(int)$params['amount']:0);
+          $card->setSeriesCard($series);
           $em->persist($card);
-
           if (($i % 50) === 0) {
             $em->flush();
             $em->clear();
-              $s=$this->getSeriesCardRepository()->find(6);
-
+              $series=$this->getSeriesCardRepository()->find($seriesId);
           }
-
-
         }
         $em->flush();
     }
+    public function validate($form){
+        $val = new Validation();
 
+        //VALIDATE
+
+        return $val;
+    }
 
     /**
+     * @param array $params
      * @return int
      */
-    protected function createSeries(){
+    protected function createSeries(array $params){
         $series=new SeriesCard();
-        $series->setStarted(new \DateTime());
-        $series->setFinished(new \DateTime());
-        $series->setNumber(0);
+        $series->setNumber($params['number']);
+        $series->setMonths($params['months']);
         $this->saveObject($series);
         return $series->getId();
     }

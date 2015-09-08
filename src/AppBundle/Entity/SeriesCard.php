@@ -15,7 +15,7 @@ class SeriesCard
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * 
      */
     private $series;
 
@@ -35,6 +35,11 @@ class SeriesCard
     private $number;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $months;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\BonusCard", mappedBy="seriesCard", cascade={"persist"})
      */
     private $bonusCard;
@@ -45,7 +50,8 @@ class SeriesCard
      */
     public function __construct()
     {
-
+        $this->started=new \DateTime();
+        $this->finished=new \DateTime();
     }
 
     /**
@@ -137,7 +143,6 @@ class SeriesCard
     public function setNumber($number)
     {
         $this->number = $number;
-
         return $this;
     }
 
@@ -182,5 +187,28 @@ class SeriesCard
     public function getBonusCard()
     {
         return $this->bonusCard;
+    }
+
+    /**
+     * Set months
+     *
+     * @param integer $months
+     * @return SeriesCard
+     */
+    public function setMonths($months)
+    {
+        $this->months = $months;
+        $this->finished->modify('+'.$months.' month');
+        return $this;
+    }
+
+    /**
+     * Get months
+     *
+     * @return integer 
+     */
+    public function getMonths()
+    {
+        return $this->months;
     }
 }

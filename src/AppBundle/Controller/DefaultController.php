@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\BonusCardStatusHelper;
 use AppBundle\EntityService\BonusCardService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,9 +15,15 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+
+        $pagination = $this->get('knp_paginator')->paginate(
+            $this->getList(),
+            $this->get('request')->query->get('page', 1),
+            50/*limit per page*/
+        );
         return $this->render('@App/default/index.html.twig', array(
-
-
+            'pagination' => $pagination,
+            'statusCards' => BonusCardStatusHelper::instance()->getAllStatus()
 
         ));
     }
@@ -26,9 +33,16 @@ class DefaultController extends Controller
      */
     public function searchAction()
     {
+        $pagination = $this->get('knp_paginator')->paginate(
+            $this->getList(),
+            $this->get('request')->query->get('page', 1),
+            50/*limit per page*/
+        );
+
         return $this->render('@App/default/index.html.twig', array(
 
-
+            'pagination' => $pagination,
+            'statusCards' => BonusCardStatusHelper::instance()->getAllStatus()
 
         ));
     }
@@ -47,7 +61,7 @@ class DefaultController extends Controller
 
     protected function getList(array $params=null){
 
-
+        return $this->getService()->getCardsListQuery($params);
     }
 
     /**
@@ -55,23 +69,32 @@ class DefaultController extends Controller
      */
     public function generatorAction()
     {
-        return $this->render('@App/default/generator_form.html.twig', array(
+         return $this->render('@App/default/generator_form.html.twig', array(
 
         ));
     }
     /**
      * @Route("/generate", name="generate")
      */
-    public function generateAction()
+    public function generateAction(Request $request)
     {
+        try {
+            $form = $request->request->get('form');
+            $validation = $this->getService()->validate($form);
+            if($validation->isValid()) {
+                $this->getService()->generateCard($form);
+                return $this->redirect($this->generateUrl('homepage'));
+            }
+        } catch(\Exception $e) {
+            die($e->getMessage());
+            return $this->render('@App/default/generator_form.html.twig', array(
 
-        $this->getService()->generateCard([]);
+            ));
+        }
 
-        return $this->render('@App/default/generator_form.html.twig', array(
 
-        ));
+
     }
-    //'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
 
     /**
      * @return BonusCardService

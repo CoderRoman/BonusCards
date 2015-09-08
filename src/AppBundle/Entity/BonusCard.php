@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
+use AppBundle\Entity\BonusCardStatusHelper;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BonusCardRepository")
@@ -31,7 +32,7 @@ class BonusCard
     private $amount;
 
     /**
-     * 
+     *
      */
     private $order;
 
@@ -46,6 +47,7 @@ class BonusCard
     public function __construct()
     {
         $this->order = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->status=BonusCardStatusHelper::STATUS_OPEN;
     }
 
     /**

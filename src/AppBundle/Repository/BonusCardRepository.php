@@ -12,4 +12,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class BonusCardRepository extends EntityRepository
 {
+
+    public function getCardsListQuery($params=null) {
+        $qb = $this->getBaseQuery();
+
+
+        return $qb->getQuery();
+    }
+    
+
+    public  function getBaseQuery() {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('b, s ')
+            ->from('AppBundle:BonusCard', 'b')
+            ->leftJoin('b.seriesCard', 's')
+            ->addOrderBy('b.id', ' DESC')
+            ->where('1=1')
+        ;
+
+        return $qb;
+    }
+
+
 }

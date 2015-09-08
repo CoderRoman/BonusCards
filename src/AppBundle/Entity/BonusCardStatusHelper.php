@@ -34,6 +34,9 @@ class BonusCardStatusHelper
         return $this->status[$id];
     }
 
+    public function getAllStatus() {
+        return $this->status;
+    }
     public static function instance() {
         if(!self::$self) {
             self::$self = new BonusCardStatusHelper();

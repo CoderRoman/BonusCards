@@ -3,9 +3,8 @@
 
          {% block content %}
 <div class="row">
-
              <div class="col-xs-3 search-pane">
-                 <form method="post" name="search" action="{{ path('search') }}">
+                 <form method="get" name="search" action="{{ path('search') }}">
                      <div class="box box-primary">
                          <div class="box-header">
                              <i class="fa fa-file-text-o"></i>
@@ -14,29 +13,40 @@
                          <div class="box-body search-box">
                              <div class="form-group">
                                  <label>Серия</label>
-                                 <input name="search[name]" type="text" class="form-control" placeholder="Серия"
+                                 <input name="search[series]" type="text" class="form-control" placeholder="Серия"
                                         value=""/>
                              </div>
 
                              <div class="form-group">
                                  <label>Номер</label>
-                                 <input name="search[name]" type="text" class="form-control" placeholder="Номер"
+                                 <input name="search[number]" type="text" class="form-control" placeholder="Номер"
                                         value=""/>
                              </div>
                              <div class="form-group">
                                  <label>Дата выпуска</label>
-                                 <input name="search[name]" type="text" class="form-control" placeholder="Номер"
-                                        value=""/>
+                                 <div class='input-group date_search' id='mf-date'>
+                                     <input type='text' name="search[started]" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                  </div>
                              </div>
                              <div class="form-group">
                                  <label>Дата окончания</label>
-                                 <input name="search[name]" type="text" class="form-control" placeholder="Номер"
-                                        value=""/>
+                                 <div class='input-group date_search' id='mf-date'>
+                                     <input type='text' name="search[finished]" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                 </div>
                              </div>
                              <div class="form-group">
                                  <label>Статус</label>
-                                 <input name="search[name]" type="text" class="form-control" placeholder="Номер"
-                                        value=""/>
+                                 <select name="search[status]" class="form-control">
+                                     {% for key,i in  statusCards %}
+                                         <option value="{{ key }}">{{ i }}</option>
+                                     {% endfor %}
+                                 </select>
                              </div>
                          </div>
 
@@ -57,7 +67,7 @@
                          {#<h4 class="box-title">{% if search %}Найденые{% else %}Все{% endif %} материалы</h4>#}
                      </div>
                      <div class="box-body content-box">
-                         <table class="table table-hover" style="font-size: 9pt;">
+                         <table class="table table-hover" style="font-size: 12pt;">
                              <thead>
                              <tr>
                                  <th style="min-width: 32px;">Серия</th>
@@ -68,9 +78,15 @@
                              </tr>
                              </thead>
                              <tbody>
-
-
-
+                                {% for c in pagination %}
+                                     <tr>
+                                         <td>{{ c.seriesCard.number }}</td>
+                                         <td>{{ c.number }}</td>
+                                         <td>{{ c.seriesCard.started |date('m-d-Y H:i') }}</td>
+                                         <td>{{ c.seriesCard.finished |date('m-d-Y H:i') }}</td>
+                                         <td>{{ statusCards[c.status] }}</td>
+                                     </tr>
+                                 {% endfor %}
                              </tbody>
                          </table>
                      </div>
@@ -79,7 +95,7 @@
                              <div class="col-md-2"></div>
                              <div class="col-md-10">
                                  <div class="dataTables_paginate paging_bootstrap">
-                                     {#{{ knp_pagination_render(pagination) }}#}
+                                     {{ knp_pagination_render(pagination) }}
                                  </div>
                              </div>
                          </div>
