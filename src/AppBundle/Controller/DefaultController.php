@@ -15,14 +15,8 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-
-        $pagination = $this->get('knp_paginator')->paginate(
-            $this->getList(),
-            $this->get('request')->query->get('page', 1),
-            50/*limit per page*/
-        );
         return $this->render('@App/default/index.html.twig', array(
-            'pagination' => $pagination,
+            'pagination' => $this->getList(),
             'statusCards' => BonusCardStatusHelper::instance()->getAllStatus()
 
         ));
@@ -33,18 +27,72 @@ class DefaultController extends Controller
      */
     public function searchAction()
     {
-        $pagination = $this->get('knp_paginator')->paginate(
-            $this->getList(),
-            $this->get('request')->query->get('page', 1),
-            50/*limit per page*/
-        );
+        $search = $this->get('request')->query->get('search');
+
 
         return $this->render('@App/default/index.html.twig', array(
 
-            'pagination' => $pagination,
+            'pagination' => $this->getList($search),
             'statusCards' => BonusCardStatusHelper::instance()->getAllStatus()
 
         ));
+    }
+
+    /**
+     * @Route("/delete/{id}", name="delete")
+     */
+
+    public function deleteAction($id)
+    {
+        try {
+            $card=$this->getService()->getBonusCardById($id);
+            if (!$card)
+                throw new \Exception('Error');
+
+            $this->getService()->removeCard($card);
+            return $this->redirect($this->generateUrl('homepage'));
+
+        }
+        catch(\Exception $e) {
+
+
+        }
+        return $this->render('@App/default/index.html.twig', array(
+
+
+            'pagination' => $this->getList(),
+            'statusCards' => BonusCardStatusHelper::instance()->getAllStatus()
+        ));
+
+
+
+    }
+
+    /**
+     * @Route("/toggle_activate/{id}", name="toggleActivate")
+     */
+    public function toggleActivateAction($id)
+    {
+        try {
+            $card=$this->getService()->getBonusCardById($id);
+            if (!$card)
+                throw new \Exception('Error');
+
+            $this->getService()->toggleActivateCard($card);
+            return $this->redirect($this->generateUrl('homepage'));
+
+        }
+        catch(\Exception $e) {
+
+
+        }
+        return $this->render('@App/default/index.html.twig', array(
+
+
+            'pagination' => $this->getList(),
+            'statusCards' => BonusCardStatusHelper::instance()->getAllStatus()
+        ));
+
     }
 
     /**
@@ -59,9 +107,13 @@ class DefaultController extends Controller
         ));
     }
 
-    protected function getList(array $params=null){
 
-        return $this->getService()->getCardsListQuery($params);
+    protected function getList(array $params=null){
+        return $pagination = $this->get('knp_paginator')->paginate(
+            $this->getService()->getCardsListQuery($params),
+            $this->get('request')->query->get('page', 1),
+            50/*limit per page*/
+        );
     }
 
     /**
@@ -86,14 +138,10 @@ class DefaultController extends Controller
                 return $this->redirect($this->generateUrl('homepage'));
             }
         } catch(\Exception $e) {
-            die($e->getMessage());
             return $this->render('@App/default/generator_form.html.twig', array(
 
             ));
         }
-
-
-
     }
 
     /**

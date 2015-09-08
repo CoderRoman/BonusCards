@@ -17,7 +17,8 @@ class Order
     /**
      * 
      * 
-     */
+     @ORM\ManyToOne(targetEntity="AppBundle\Entity\BonusCard", inversedBy="order")
+     @ORM\JoinColumn(name="bonus_card_id", referencedColumnName="id")*/
     private $bonusCard;
 
     /**

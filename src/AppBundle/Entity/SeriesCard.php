@@ -4,6 +4,7 @@ use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SeriesCardRepository")
+ * @ORM\Table(name="series_cards")
  */
 class SeriesCard
 {

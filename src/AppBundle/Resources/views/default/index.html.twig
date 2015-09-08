@@ -43,6 +43,8 @@
                              <div class="form-group">
                                  <label>Статус</label>
                                  <select name="search[status]" class="form-control">
+                                     <option value=""></option>
+
                                      {% for key,i in  statusCards %}
                                          <option value="{{ key }}">{{ i }}</option>
                                      {% endfor %}
@@ -85,8 +87,26 @@
                                          <td>{{ c.seriesCard.started |date('m-d-Y H:i') }}</td>
                                          <td>{{ c.seriesCard.finished |date('m-d-Y H:i') }}</td>
                                          <td>{{ statusCards[c.status] }}</td>
+                                         <td>
+                                         <a href="{{ path('delete', {'id': c.id}) }}" title="Удалить"
+                                            class="btn btn-default btn-xs ">
+                                             удалить
+                                         </a>
+                                             <a href="{{ path('toggleActivate', {'id': c.id}) }}"
+                                                class="btn btn-default btn-xs ">
+                                                 (Де)активация
+                                             </a>
+
+
+                                         </td>
+
                                      </tr>
                                  {% endfor %}
+                                 {% if pagination|length==0 %}
+                                     <tr>
+                                         <td colspan="5" style="text-align: center">Список пуст</td>
+                                     </tr>
+                                {% endif %}
                              </tbody>
                          </table>
                      </div>

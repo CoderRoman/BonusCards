@@ -5,7 +5,7 @@ use AppBundle\Entity\BonusCardStatusHelper;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BonusCardRepository")
- * @ORM\Table(name="cards", indexes={@ORM\Index(name="bonus_card_number_idx", columns={"number"})})
+ * @ORM\Table(name="bonus_cards", indexes={@ORM\Index(name="bonus_card_number_idx", columns={"number"})})
  */
 class BonusCard
 {
@@ -32,8 +32,13 @@ class BonusCard
     private $amount;
 
     /**
-     *
+     * @ORM\Column(type="boolean", nullable=true)
      */
+    private $deleted;
+
+    /**
+     *
+     @ORM\OneToMany(targetEntity="AppBundle\Entity\Order", mappedBy="bonusCard")*/
     private $order;
 
     /**
@@ -48,6 +53,7 @@ class BonusCard
     {
         $this->order = new \Doctrine\Common\Collections\ArrayCollection();
         $this->status=BonusCardStatusHelper::STATUS_OPEN;
+        $this->deleted=false;
     }
 
     /**
@@ -184,4 +190,29 @@ class BonusCard
     {
         return $this->seriesCard;
     }
+
+    /**
+     * Set deleted
+     *
+     * @param boolean $deleted
+     * @return BonusCard
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return boolean 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+
 }

@@ -12,23 +12,41 @@ use Doctrine\ORM\EntityRepository;
  */
 class BonusCardRepository extends EntityRepository
 {
+    public function getById($id){
+        $qb = $this->getBaseQuery();
+        $qb->andWhere('bc.id = :id')->setParameter(':id',$id);
+        return $qb->getQuery()->getOneOrNullResult();
 
+    }
     public function getCardsListQuery($params=null) {
         $qb = $this->getBaseQuery();
 
+        if ($params) {
+            if ($params['series'])
+                $qb->andWhere('s.number = :series')->setParameter(':series',$params['series']);
+            if ($params['number'])
+                $qb->andWhere('bc.number = :number')->setParameter(':number',$params['number']);
+            if ($params['started'])
+                $qb->andWhere('s.started >= :started')->setParameter(':started',\DateTime::createFromFormat('d.m.Y H:i', $params['started']));
+            if ($params['finished'])
+                $qb->andWhere('s.finished >= :finished')->setParameter(':finished',\DateTime::createFromFormat('d.m.Y H:i', $params['finished']));
+            if ($params['status'])
+                $qb->andWhere('bc.status = :status')->setParameter(':status',$params['status']);
+
+        }
 
         return $qb->getQuery();
     }
     
 
-    public  function getBaseQuery() {
+    protected  function getBaseQuery() {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
-            ->select('b, s ')
-            ->from('AppBundle:BonusCard', 'b')
-            ->leftJoin('b.seriesCard', 's')
-            ->addOrderBy('b.id', ' DESC')
-            ->where('1=1')
+            ->select('bc, s ')
+            ->from('AppBundle:BonusCard', 'bc')
+            ->leftJoin('bc.seriesCard', 's')
+            ->addOrderBy('bc.id', ' DESC')
+            ->where('bc.deleted is NULL')
         ;
 
         return $qb;
