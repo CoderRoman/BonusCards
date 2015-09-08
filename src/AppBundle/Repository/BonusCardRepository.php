@@ -46,7 +46,7 @@ class BonusCardRepository extends EntityRepository
             ->from('AppBundle:BonusCard', 'bc')
             ->leftJoin('bc.seriesCard', 's')
             ->addOrderBy('bc.id', ' DESC')
-            ->where('bc.deleted is NULL')
+            ->where('bc.deleted = 0')
         ;
 
         return $qb;
