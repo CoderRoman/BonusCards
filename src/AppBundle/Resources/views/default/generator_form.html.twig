@@ -1,0 +1,42 @@
+{% extends '@App/base.html.twig' %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form name="author" method="post" action="{{ path('generate') }}">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Генерация карт</h3>
+                    </div>
+                    <div class="box-body">
+
+
+
+
+                    </div>
+                    <div class="box-footer">
+                        <div  class="form-group right-buttons">
+                            <button id="mf-btn-save" class="btn btn-primary" type="submit">
+                                <i class="fa fa-save"></i> Сохранить</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block stylesheets %}
+
+
+
+{% endblock %}

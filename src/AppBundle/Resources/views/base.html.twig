@@ -2,15 +2,71 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}BonusCards test{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        {% if app.environment == 'prod' %}
+            <!-- prod:cards.css -->
+
+            <!-- endbuild -->
+
+        {% else %}
+            <!-- dev:cards.css -->
+<link rel="stylesheet" href="/tmp/css/cards.css/cards.css" />
+<!-- endbuild -->
+        {% endif %}
+
+
     </head>
-    <body>
+    <body class="wysihtml5-supported skin-blue sidebar-collapse">
+    <div class="wrapper">
 
 
 
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+    <header class="main-header">
+        <a href="{{ path('homepage') }}" class="logo"><b>CARDS</b></a>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ path('generator_form') }}"><span class="hidden-xs">Generate</span></a></li>
+            </ul>
+        </nav>
+    </header>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+    <div class="content-wrapper">
+        <section class="content-header">
+            {% block contentheader %} {% endblock %}
+        </section>
+        <section class="content">
+            {% block content %}
+
+            {% endblock %}
+        </section>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+
+            </div>
+        </footer>
+
+    </div>
+
+        {% block javascripts %}
+
+            {% if app.environment == 'prod' %}
+                <!-- prod:cards.js -->
+
+                <!-- endbuild -->
+
+            {% else %}
+                <!-- dev:cards.js -->
+                <script src="/tmp/js/cards.js/cards.js"></script>
+                <!-- endbuild -->
+
+            {% endif %}
+        {% endblock %}
+    </div>
     </body>
 </html>

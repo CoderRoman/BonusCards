@@ -1,0 +1,25 @@
+{
+  "name": "BonusCards",
+  "version": "0.0.0",
+  "authors": [
+    ""
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "normalize.css": "*",
+    "jquery": "2.1.4",
+    "bootstrap": "3.3.4",
+    "admin-lte": "",
+    "bootstrap3-dialog": "",
+    "moment": "",
+    "jquery-ui": "1.10.3",
+    "bootstrap3-datetimepicker": "3.*"
+  }
+}

@@ -21,4 +21,4 @@ design
 node_modules
 Kuban24.skipper
 /web/res
-k24.sql*
+/bower_components

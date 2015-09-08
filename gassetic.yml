@@ -1,0 +1,80 @@
+requires:
+    minify: gulp-minify-css
+    concat: gulp-concat
+    uglify: gulp-uglify
+    sass: gulp-sass
+    rigger: gulp-rigger
+    freeze: gulp-freeze
+
+mimetypes:
+    fonts:
+        dev:
+            outputFolder: web/tmp/css
+            tasks: []
+            autoRenaming: false
+        prod:
+            outputFolder: web/compiled/css
+            tasks: []
+        files:
+            fonts:
+                - bower_components/bootstrap/dist/fonts/*
+    css:
+        dev:
+            outputFolder: web/tmp/css
+            webPath:      /tmp/css
+            tasks:
+                - { name: sass}
+                - { name: minify }
+                - { name: concat, args: '%filename%' }
+        prod:
+            outputFolder: web/compiled/css  # Save the files here
+            webPath:      /compiled/css     # Specify the web path
+            tasks:
+                - { name: sass}
+                - { name: minify }
+                - { name: concat, args: '%filename%' }
+                - { name: freeze }
+        files:
+            cards.css:
+#                - bower_component/jquery-ui/themes/base/jquery-ui.css
+                - bower_components/bootstrap/dist/css/bootstrap.css
+                - bower_components/admin-lte/dist/css/AdminLTE.css
+                - bower_components/admin-lte/dist/css/skins/skin-blue.css
+                - bower_components/bootstrap3-datetimepicker/build/css/bootstrap-datetimepicker.css
+                - src/AppBundle/Resources/public/style/app.css
+
+        watch:
+            - src/AppBundle/Resources/public/style/**/*.*
+    js:
+        dev:
+            outputFolder: web/tmp/js  # Save the files here
+            webPath:      /tmp/js
+            tasks:
+                - { name: concat, args: '%filename%' }
+
+        prod:
+            outputFolder: web/compiled/js
+            webPath:      /compiled/js
+            tasks:
+                - { name: concat, args: '%filename%' }
+                - { name: uglify, args: { mangle: false } }
+                - { name: freeze }
+        files:
+            cards.js:
+                - bower_components/jquery/dist/jquery.js
+                - bower_components/jquery-ui/ui/jquery-ui.js
+                - bower_components/bootstrap/dist/js/bootstrap.js
+                - bower_components/moment/moment.js
+                - bower_components/moment/locale/ru.js
+                - bower_components/bootstrap3-datetimepicker/src/js/bootstrap-datetimepicker.js
+                - src/AppBundle/Resources/public/js/app.js
+        watch:
+                - src/AppBundle/Resources/public/js/*.js
+
+replacementPaths:
+    - src/AppBundle/Resources/views/base.html.twig
+
+default:
+    - css
+    - js
+    - fonts
